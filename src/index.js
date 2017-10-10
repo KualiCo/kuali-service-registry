@@ -23,9 +23,9 @@ class ServiceRegistry {
     return this.services[serviceName]
   }
 
-  registerModuleServices (modulePath, parentModule) {
+  registerModuleServices (modulePath, parentRequire) {
     try {
-      const { registerServices } = parentModule.require(modulePath)
+      const { registerServices } = parentRequire(modulePath)
       registerServices(this)
     } catch (exception) {
       this.logger.warn(

@@ -28,7 +28,7 @@ describe('service-registry', () => {
     const registry = new ServiceRegistry()
     registry.registerModuleServices(
       path.join(__dirname, '..', '__mocks__', 'twelve'),
-      module
+      require
     )
     expect(registry.services.age).toEqual(12)
   })
@@ -39,7 +39,7 @@ describe('service-registry', () => {
       info: jest.fn()
     }
     const registry = new ServiceRegistry({ logger })
-    registry.registerModuleServices('some-module-that-does-not-exist', module)
+    registry.registerModuleServices('some-module-that-does-not-exist', require)
     expect(registry.services).toEqual({})
     expect(logger.warn).toHaveBeenCalled()
     expect(logger.info).not.toHaveBeenCalled()
@@ -51,7 +51,7 @@ describe('service-registry', () => {
       info: jest.fn()
     }
     const registry = new ServiceRegistry({ logger, debug: true })
-    registry.registerModuleServices('some-module-that-does-not-exist', module)
+    registry.registerModuleServices('some-module-that-does-not-exist', require)
     expect(registry.services).toEqual({})
     expect(logger.warn).toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalled()
@@ -65,7 +65,7 @@ describe('service-registry', () => {
       .removeService('age')
       .registerModuleServices(
         path.join(__dirname, '..', '__mocks__', 'twelve'),
-        module
+        require
       )
     expect(registry.services).toEqual({
       age: 12,

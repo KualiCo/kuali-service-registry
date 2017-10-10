@@ -21,7 +21,7 @@ registry
   .setService('myConfig', {
     port: '3000'
   })
-  .registerModuleServices('some-node-module')
+  .registerModuleServices('some-node-module', require)
 
 const { userMiddleware, myConfig } = registry.services
 ```
@@ -73,13 +73,16 @@ chaining).
 - `service` {*} - Anything you want to register to that service key. It can be
   literally anything, or nothing.
 
-## `registry.registerModuleServices(modulePath)`
+## `registry.registerModuleServices(modulePath, parentRequire)`
 
 Gives registry control over to a give module. Returns the registry (for
 chaining).
 
 - `modulePath` {string} - Should be an absolute path to a module, or just the
 module name if it's a module that is located in your project's `node_modules`.
+- `parentRequire` {Function} - You need to pass in the `require` function that
+  you use in your context, so that it is able to include modules that you have
+  access to, but this module does not.
 
 The module should export a function `registerServices` that takes one argument,
 which is this registry. The idea is that this other module will register it's
