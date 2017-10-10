@@ -1,7 +1,5 @@
 'use strict'
 
-const R = require('ramda')
-
 class ServiceRegistry {
   constructor (options) {
     this.services = {}
@@ -15,7 +13,7 @@ class ServiceRegistry {
   }
 
   setService (serviceName, service) {
-    this.services = R.assoc(serviceName, service, this.services)
+    this.services[serviceName] = service
     return this
   }
 
@@ -39,7 +37,7 @@ class ServiceRegistry {
   }
 
   removeService (serviceName) {
-    this.services = R.dissoc(serviceName, this.services)
+    delete this.services[serviceName]
     return this
   }
 }

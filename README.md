@@ -1,6 +1,6 @@
 # kuali-service-registry
 
-TODO: Description
+A service registry with helpers to include optional service overrides.
 
 # Installation
 
