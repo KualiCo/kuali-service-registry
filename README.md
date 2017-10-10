@@ -11,9 +11,10 @@ npm install kuali-service-registry
 # Usage
 
 ```js
-const { createServiceRegistry } = require('kuali-service-registry')
+// Yes, this is a singleton with shared state, more on that later
+const registry = require('kuali-service-registry')
 
-const serviceRegistry = createServiceRegistry()
+registry
   .setService('userMiddleware', (req, res, next) => {
     req.user = getUser()
   })
@@ -22,18 +23,23 @@ const serviceRegistry = createServiceRegistry()
   })
   .registerModuleServices('some-node-module')
 
-const { userMiddleware, myConfig } = serviceRegistry.services
+const { userMiddleware, myConfig } = registry.services
 ```
 
-I know what you're probably thinking. Why don't you just use your own object to
-keep track of these services. Admittedly, this is probably too silly to use this
-module. The use case this fits if you have an optional dependency you want to
-extend or replace functionality in your application, but only if the dependency
-is installed.
+Note: The default export is a singleton so that you can `require('kuali-service-registry')`
+in any file in your application and have a shared registry. If you'd like to
+configure your own, you can pull in the class and create your own
+ServiceRegistry:
+
+```js
+const { ServiceRegistry } = require('kuali-service-registry')
+
+const registry = new ServiceRegistry()
+```
 
 # API
 
-## `createServiceRegistry(options)`
+## `new ServiceRegistry(options)`
 
 Creates a service registry, which keeps track of the registered services.
 returns a `registry`
@@ -42,6 +48,21 @@ returns a `registry`
   two properties that are both functions: `info` and `warn`.
 - `options.debug` {Boolean} - Set to true to output additional error information
   when an error loading a registry module occurs.
+
+## `registry.configure(options)`
+
+Configures the registry with the given options. Note that you should only call
+this once as it will override the options with the defaults of the omitted
+options. For example:
+
+```js
+const registry = require('kuali-service-registry')
+
+registry.configure({ logger: console }) // Sets the logger to console, and debug to default
+registry.configure({ debug: true }) // Sets the debug to true, and the logger to the default value
+```
+
+The options are the same options in the constructor.
 
 ## `registry.setService(serviceName, service)`
 

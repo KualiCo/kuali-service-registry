@@ -2,31 +2,33 @@
 'use strict'
 
 const path = require('path')
-const { createServiceRegistry } = require('../index')
+const { ServiceRegistry } = require('../index')
 
 describe('service-registry', () => {
   test('initializes with empty services', () => {
-    const registry = createServiceRegistry()
+    const registry = new ServiceRegistry()
     expect(registry.services).toEqual({})
   })
 
   test('setService adds a new service', () => {
-    const registry = createServiceRegistry()
+    const registry = new ServiceRegistry()
     registry.setService('age', 16)
     expect(registry.services.age).toEqual(16)
+    expect(registry.getService('age')).toEqual(16)
   })
 
   test('removeService removes a service', () => {
-    const registry = createServiceRegistry()
+    const registry = new ServiceRegistry()
     registry.setService('age', 16)
     registry.removeService('age')
     expect(registry.services).toEqual({})
   })
 
   test('registerModuleServices registers module', () => {
-    const registry = createServiceRegistry()
+    const registry = new ServiceRegistry()
     registry.registerModuleServices(
-      path.join(__dirname, '..', '__mocks__', 'twelve')
+      path.join(__dirname, '..', '__mocks__', 'twelve'),
+      module
     )
     expect(registry.services.age).toEqual(12)
   })
@@ -36,8 +38,8 @@ describe('service-registry', () => {
       warn: jest.fn(),
       info: jest.fn()
     }
-    const registry = createServiceRegistry({ logger })
-    registry.registerModuleServices('some-module-that-does-not-exist')
+    const registry = new ServiceRegistry({ logger })
+    registry.registerModuleServices('some-module-that-does-not-exist', module)
     expect(registry.services).toEqual({})
     expect(logger.warn).toHaveBeenCalled()
     expect(logger.info).not.toHaveBeenCalled()
@@ -48,19 +50,23 @@ describe('service-registry', () => {
       warn: jest.fn(),
       info: jest.fn()
     }
-    const registry = createServiceRegistry({ logger, debug: true })
-    registry.registerModuleServices('some-module-that-does-not-exist')
+    const registry = new ServiceRegistry({ logger, debug: true })
+    registry.registerModuleServices('some-module-that-does-not-exist', module)
     expect(registry.services).toEqual({})
     expect(logger.warn).toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalled()
   })
 
   test('serviceRegistry is chainable', () => {
-    const registry = createServiceRegistry()
+    const registry = new ServiceRegistry()
+      .configure({ logger: console })
       .setService('age', 16)
       .setService('height', `6'4"`)
       .removeService('age')
-      .registerModuleServices(path.join(__dirname, '..', '__mocks__', 'twelve'))
+      .registerModuleServices(
+        path.join(__dirname, '..', '__mocks__', 'twelve'),
+        module
+      )
     expect(registry.services).toEqual({
       age: 12,
       height: `6'4"`
