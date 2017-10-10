@@ -1,0 +1,22 @@
+{
+  "name": "kuali-service-registry",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "jest": {
+    "coverageThreshold": {
+      "branches": 100,
+      "functions": 100,
+      "lines": 100,
+      "statements": 100
+    }
+  },
+  "dependencies": {
+    "ramda": "^0.25.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^21.1.2",
+    "jest": "^21.2.1",
+    "standard": "^10.0.3"
+  }
+}
