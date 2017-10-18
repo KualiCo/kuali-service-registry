@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KualiCo/kuali-service-registry.git"
+  },
   "scripts": {
     "pretest": "npm run test:lint",
     "test": "jest --coverage",
