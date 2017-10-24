@@ -1,6 +1,6 @@
 {
   "name": "kuali-service-registry",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "src/index.js",
   "license": "AGPL-3.0",
   "repository": {
